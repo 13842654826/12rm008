@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onload 动态创建加载图片</title>
+    <style>
+        /* 基础样式，优化显示效果 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .img-container {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+        .status {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        /* 限制动态图片最大宽度，适配不同屏幕 */
+        #dynamicImg {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>页面 Onload 后动态加载图片演示</h1>
+    <!-- 用于显示图片加载状态 -->
+    <div class="status" id="loadStatus">等待页面加载完成...</div>
+    <!-- 用于承载动态创建的图片 -->
+    <div class="img-container" id="imgContainer"></div>
+
+    <script>
+        // 页面完全加载（onload）后执行
+        window.onload = function() {
+            // 1. 更新状态提示
+            const statusElement = document.getElementById('loadStatus');
+            statusElement.textContent = "页面加载完成，开始动态创建图片...";
+
+            // 2. 创建图片元素
+            const img = document.createElement('img');
+            // 设置图片唯一ID，便于样式控制
+            img.id = "dynamicImg";
+            // 图片地址（示例用免费占位图，可替换为你的图片地址）
+            img.src = "xingxing.jpg";
+            // 必加alt属性，提升无障碍性
+            img.alt = "动态创建的示例图片";
+
+            // 3. 监听图片加载成功事件
+            img.onload = function() {
+                statusElement.textContent = "✅ 图片加载成功！";
+                console.log("图片加载完成");
+            };
+
+            // 4. 监听图片加载失败事件（比如地址错误、网络问题）
+            img.onerror = function() {
+                statusElement.textContent = "❌ 图片加载失败，请检查地址！";
+                // 加载失败时可显示备用图片
+                img.src = "https://picsum.photos/800/500?grayscale";
+                img.alt = "图片加载失败，显示备用图";
+                console.error("图片加载失败");
+            };
+
+            // 5. 将图片添加到页面容器中
+            const container = document.getElementById('imgContainer');
+            container.appendChild(img);
+        };
+    </script>
+</body>
+</html>

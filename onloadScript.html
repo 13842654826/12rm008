@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>动态创建Script</title>
+</head>
+<body>
+<h1>动态创建Script示例</h1>
+<p>页面加载完成后，会动态创建script标签</p>
+<div id="result">等待脚本执行...</div>
+
+<script>
+    window.onload = function() {
+        const script = document.createElement('script');
+
+        const code = `
+            document.getElementById('result').innerHTML =
+                '动态脚本已执行！时间：' + new Date().toLocaleTimeString();
+
+            function test() {
+                alert('动态脚本函数被调用！');
+            }
+        `;
+
+        script.src = 'data:text/javascript,' + encodeURIComponent(code);
+        document.body.appendChild(script);
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>包含脚本和图片的页面示例</title>
+
+</head>
+<body>
+
+
+<!-- 无async/defer的外部脚本（默认阻塞解析，按顺序加载执行） -->
+
+<script src="common.js"></script>
+
+
+
+<!-- 新增：预留一个容器用于显示脚本信息 -->
+<div class="script-info"></div>
+
+
+<script>
+    // 1. 获取预留的显示容器
+    const infoContainer = document.querySelector('.script-info');
+    // 2. 原逻辑不变，仅把控制台输出改成页面文本
+    const testValue = typeof test !== 'undefined' ? test : "未定义";
+    const displayText = `页面包含 <script src="...">（无 async/defer）：${testValue}`;
+    // 3. 将文本插入到页面容器中
+    infoContainer.textContent = displayText;
+
+    // 保留原控制台输出（可选，便于调试）
+    console.log(displayText);
+</script>
+</body>
+</html>

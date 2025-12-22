@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onload 后发起 XMLHttpRequest 请求</title>
+    <style>
+        /* 基础样式，优化请求结果展示 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.8;
+        }
+        .container {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+        .status {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .success { color: #27ae60; } /* 成功绿色 */
+        .error { color: #e74c3c; }   /* 错误红色 */
+        .response {
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            white-space: pre-wrap; /* 保留JSON格式的换行和缩进 */
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+<h1>页面 Onload 后发起 XMLHttpRequest 请求</h1>
+
+<div class="container">
+    <div class="status" id="requestStatus">等待页面加载完成...</div>
+    <div class="response" id="responseContent">暂无响应数据</div>
+</div>
+
+<script>
+    // 页面完全加载（onload）后执行AJAX请求
+    window.onload = function() {
+        // 1. 获取页面元素，用于展示状态和响应
+        const statusEl = document.getElementById('requestStatus');
+        const responseEl = document.getElementById('responseContent');
+
+        // 2. 配置请求参数（免费测试接口，无需后端）
+        const apiUrl = "https://jsonplaceholder.typicode.com/posts/1"; // 测试接口
+        const xhr = new XMLHttpRequest();
+
+        // 3. 更新初始状态
+        statusEl.textContent = "正在发起 XMLHttpRequest 请求...";
+
+        // 4. 配置请求：GET方法、接口地址、异步请求（true）
+        xhr.open('GET', apiUrl, true);
+        // 设置响应类型为JSON，避免手动解析
+        xhr.responseType = 'json';
+        // 可选：设置请求头（POST请求时常用）
+        // xhr.setRequestHeader('Content-Type', 'application/json');
+
+        // 5. 请求成功回调（请求完成且状态码正常）
+        xhr.onload = function() {
+            // 判断HTTP状态码是否在成功区间（200-299）
+            if (xhr.status >= 200 && xhr.status < 300) {
+                statusEl.className = "status success";
+                statusEl.textContent = "✅ 请求成功（状态码：" + xhr.status + "）";
+                // 格式化响应数据，便于阅读
+                responseEl.textContent = JSON.stringify(xhr.response, null, 2);
+            } else {
+                // 状态码异常（如404、500）
+                statusEl.className = "status error";
+                statusEl.textContent = "❌ 请求失败（状态码：" + xhr.status + "）";
+                responseEl.textContent = "服务器返回错误：" + xhr.statusText;
+            }
+        };
+
+        // 6. 网络错误回调（如断网、域名错误）
+        xhr.onerror = function() {
+            statusEl.className = "status error";
+            statusEl.textContent = "❌ 网络请求失败";
+            responseEl.textContent = "请检查网络连接或接口地址是否正确";
+        };
+
+        // 7. 发送请求（GET请求无需传参，POST请求需在send中传JSON字符串）
+        xhr.send();
+    };
+</script>
+</body>
+</html>
