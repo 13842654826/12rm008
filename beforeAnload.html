@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- 引入样式表 -->
+    <link rel="stylesheet" href="style.css">
+    <!-- 定义自定义字体 -->
+    <style>
+        @font-face {
+          font-family: myFirstFont;
+          src: url(sansation_light.woff);
+        }
+
+        .custom-font {
+          font-family: myFirstFont;
+        }
+    </style>
+</head>
+<body>
+<h1>综合页面展示</h1>
+
+<!-- 脚本信息展示区域 -->
+<div class="script-info"></div>
+
+<!-- 自定义字体展示区域 -->
+<div class="custom-font">
+    这段文字使用了自定义字体显示，通过 CSS 的 @font-face 规则定义
+</div>
+
+<!-- 图片展示 -->
+<div class="image-container">
+    <img src="xingxing.jpg" alt="星星图片" width="800" height="800">
+</div>
+
+<!-- 外部脚本引入（无 async/defer） -->
+<script src="common.js"></script>
+
+<!-- 脚本逻辑 -->
+<script>
+    // 获取显示容器
+    const infoContainer = document.querySelector('.script-info');
+    // 检查外部脚本加载情况
+    const testValue = typeof test !== 'undefined' ? test : "未定义";
+    const displayText = `外部脚本加载状态：${testValue}`;
+    // 显示脚本信息
+    infoContainer.textContent = displayText;
+    console.log(displayText);
+</script>
+</body>
+</html>
