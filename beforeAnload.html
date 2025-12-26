@@ -4,19 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- 引入样式表 -->
-    <link rel="stylesheet" href="style.css">
-    <!-- 定义自定义字体 -->
+    <!-- 引入样式表（根路径引用，适配GitHub Pages） -->
+    <link rel="stylesheet" href="./style.css">
+    <!-- 定义自定义字体（修复路径，添加字体格式声明增强兼容性） -->
     <style>
         @font-face {
           font-family: myFirstFont;
-          src: url(sansation_light.woff);
+          src: url('./sansation_light.woff') format('woff'); /* 明确格式，路径加./确保相对根目录 */
+          font-weight: normal;
+          font-style: normal;
         }
 
         .custom-font {
-          font-family: myFirstFont;
+          font-family: myFirstFont, sans-serif; /* 添加后备字体，避免字体加载失败时显示异常 */
+          font-size: 20px; /* 放大字体，方便查看效果 */
         }
     </style>
+    <!-- 添加favicon引用（解决favicon.ico 404） -->
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
 </head>
 <body>
 <h1>综合页面展示</h1>
@@ -29,24 +34,29 @@
     这段文字使用了自定义字体显示，通过 CSS 的 @font-face 规则定义
 </div>
 
-<!-- 图片展示 -->
+<!-- 图片展示（路径加./，适配GitHub Pages） -->
 <div class="image-container">
-    <img src="xingxing.jpg" alt="星星图片" width="800" height="800">
+    <img src="./xingxing.jpg" alt="星星图片" width="800" height="800">
 </div>
 
-<!-- 外部脚本引入（无 async/defer） -->
-<script src="common.js"></script>
+<!-- 外部脚本引入（路径加./） -->
+<script src="./common.js"></script>
 
-<!-- 脚本逻辑 -->
+<!-- 脚本逻辑（保留原有功能，增加错误捕获） -->
 <script>
     // 获取显示容器
     const infoContainer = document.querySelector('.script-info');
-    // 检查外部脚本加载情况
-    const testValue = typeof test !== 'undefined' ? test : "未定义";
-    const displayText = `外部脚本加载状态：${testValue}`;
-    // 显示脚本信息
-    infoContainer.textContent = displayText;
-    console.log(displayText);
+    try {
+        // 检查外部脚本加载情况
+        const testValue = typeof test !== 'undefined' ? test : "未定义";
+        const displayText = `外部脚本加载状态：${testValue}`;
+        // 显示脚本信息
+        infoContainer.textContent = displayText;
+        console.log(displayText);
+    } catch (error) {
+        infoContainer.textContent = `脚本执行出错：${error.message}`;
+        console.error("脚本错误：", error);
+    }
 </script>
 </body>
 </html>
