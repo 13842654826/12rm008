@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        /* 基础样式 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.8;
+        }
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        h2 {
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        /* AJAX请求相关样式 */
+        .status {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .success { color: #27ae60; } /* 成功绿色 */
+        .error { color: #e74c3c; }   /* 错误红色 */
+        .response {
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        /* 图片相关样式 */
+        .img-container {
+            margin-top: 10px;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+        #dynamicImg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* 动态脚本相关样式 */
+        .script-result {
+            padding: 15px;
+            background-color: #f0f7ff;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Onload 事件综合示例页面</h1>
+
+    <!-- AJAX请求部分 -->
+    <div class="section">
+        <h2>1. 页面加载后发起XMLHttpRequest请求</h2>
+        <div class="status" id="requestStatus">等待页面加载完成...</div>
+        <div class="response" id="responseContent">暂无响应数据</div>
+    </div>
+
+    <!-- 动态创建脚本部分 -->
+    <div class="section">
+        <h2>2. 页面加载后动态创建Script</h2>
+        <p>页面加载完成后，会动态创建script标签并执行</p>
+        <div class="script-result" id="scriptResult">等待脚本执行...</div>
+        <button onclick="test()">调用动态脚本中的函数</button>
+    </div>
+
+    <!-- 动态加载图片部分 -->
+    <div class="section">
+        <h2>3. 页面加载后动态加载图片</h2>
+        <div class="status" id="imgLoadStatus">等待页面加载完成...</div>
+        <div class="img-container" id="imgContainer"></div>
+    </div>
+
+    <script>
+        // 页面完全加载（onload）后执行所有操作
+        window.onload = function() {
+            // 1. 执行AJAX请求
+            initAjaxRequest();
+
+            // 2. 动态创建脚本
+            createDynamicScript();
+
+            // 3. 动态加载图片
+            loadDynamicImage();
+        };
+
+        // AJAX请求函数
+        function initAjaxRequest() {
+            const statusEl = document.getElementById('requestStatus');
+            const responseEl = document.getElementById('responseContent');
+            const apiUrl = "https://jsonplaceholder.typicode.com/posts/1";
+            const xhr = new XMLHttpRequest();
+
+            statusEl.textContent = "正在发起 XMLHttpRequest 请求...";
+            xhr.open('GET', apiUrl, true);
+            xhr.responseType = 'json';
+
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    statusEl.className = "status success";
+                    statusEl.textContent = "✅ 请求成功（状态码：" + xhr.status + "）";
+                    responseEl.textContent = JSON.stringify(xhr.response, null, 2);
+                } else {
+                    statusEl.className = "status error";
+                    statusEl.textContent = "❌ 请求失败（状态码：" + xhr.status + "）";
+                    responseEl.textContent = "服务器返回错误：" + xhr.statusText;
+                }
+            };
+
+            xhr.onerror = function() {
+                statusEl.className = "status error";
+                statusEl.textContent = "❌ 网络请求失败";
+                responseEl.textContent = "请检查网络连接或接口地址是否正确";
+            };
+
+            xhr.send();
+        }
+
+        // 动态创建脚本函数
+        function createDynamicScript() {
+            const script = document.createElement('script');
+
+            const code = `
+                document.getElementById('scriptResult').innerHTML =
+                    '动态脚本已执行！时间：' + new Date().toLocaleTimeString();
+
+                function test() {
+                    alert('动态脚本函数被调用！当前时间：' + new Date().toLocaleTimeString());
+                }
+            `;
+
+            script.src = 'data:text/javascript,' + encodeURIComponent(code);
+            document.body.appendChild(script);
+        }
+
+        // 动态加载图片函数
+        function loadDynamicImage() {
+            const statusElement = document.getElementById('imgLoadStatus');
+            statusElement.textContent = "页面加载完成，开始动态创建图片...";
+
+            const img = document.createElement('img');
+            img.id = "dynamicImg";
+            img.src = "xingxing.jpg";
+            img.alt = "动态创建的示例图片";
+
+            img.onload = function() {
+                statusElement.textContent = "✅ 图片加载成功！";
+                console.log("图片加载完成");
+            };
+
+            img.onerror = function() {
+                statusElement.textContent = "❌ 图片加载失败，显示备用图";
+                img.src = "https://picsum.photos/800/500?grayscale";
+                img.alt = "图片加载失败，显示备用图";
+                console.error("图片加载失败");
+            };
+
+            const container = document.getElementById('imgContainer');
+            container.appendChild(img);
+        }
+    </script>
+</body>
+</html>
