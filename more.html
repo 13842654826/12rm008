@@ -10,54 +10,45 @@
 </head>
 
 <body>
+
+
 <script>
-    // 页面完全加载（onload）后执行所有操作
     window.onload = function() {
+        // 修复语法错误：去掉回调函数后的 .0，延迟时间设为 0（可根据需要调整，比如 500 毫秒）
+        setTimeout(() => {
+            const imgContainer = document.getElementById('imageContainer');
+            const img = new Image(); // 用 Image 对象创建图片，方便监听加载状态
 
+            // 图片地址（你的原地址）
+            img.src = "https://13842654826.github.io/12rm008/xingxing.jpg";
 
-        //  动态加载图片
-        loadDynamicImage();
+            // 图片加载成功：插入到容器
+            img.onload = function() {
+                imgContainer.innerHTML = ''; // 清空“加载中”提示
+                imgContainer.appendChild(img); // 添加图片
+            };
+
+            // 图片加载失败（比如 404）：显示兜底提示
+            img.onerror = function() {
+                imgContainer.innerHTML = '星星图片加载失败啦～ 可以检查一下图片地址是否正确哦！';
+            };
+        }, 0); // 延迟时间：0 毫秒（立即执行），可改为 300/500 毫秒（轻微延迟）
     };
-
-    // 动态加载图片函数
-    function loadDynamicImage() {
-        const statusElement = document.getElementById('imgLoadStatus');
-        statusElement.textContent = "页面加载完成，开始动态创建图片...";
-
-        const img = document.createElement('img');
-        img.id = "dynamicImg";
-        img.src = "./rose.png";
-        img.alt = "动态创建的示例图片";
-
-        img.onload = function() {
-            statusElement.textContent = "✅ 图片加载成功！";
-            console.log("图片加载完成");
-        };
-
-        img.onerror = function() {
-            statusElement.textContent = "❌ 图片加载失败，显示备用图";
-            img.src = "https://picsum.photos/800/500?grayscale";
-            img.alt = "图片加载失败，显示备用图";
-            console.error("图片加载失败");
-        };
-
-        const container = document.getElementById('imgContainer');
-        container.appendChild(img);
-    }
 </script>
 
-
-
-
-<img id="img" src="./xingxing.jpg" alt="页面首图" width="800" height="800"><br>
+<h2>onload前子资源</h2>
+<img id="img" src="./rose.png" alt="页面首图" width="800" height="800"><br>
 <div class="section">
-    <h2>3. 页面加载后动态加载图片</h2>
-    <div class="status" id="imgLoadStatus">等待页面加载完成...</div>
-    <div class="img-container" id="imgContainer"></div>
+    <h2>onload后子资源</h2>
+    <div id="imageContainer">加载中...</div>
 </div>
-
-
+<h2>data协议资源</h2>
 <img alt="Beer" src="data:image/png;base64,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"/>
+
+
+
+
+
 
 </body>
 </html>

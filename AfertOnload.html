@@ -1,81 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>星星图片加载器</title>
+    <title>加载星星图片</title>
+    <!-- 可选：设置图片容器样式，避免加载后布局错乱 -->
+    <style>
+        #imageContainer {
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+        }
+        #imageContainer img {
+            max-width: 80%;
+            height: auto; /* 自适应大小，不拉伸 */
+        }
+    </style>
 </head>
 <body>
-<h2>星星图片加载器</h2>
-
-<div>
-    <button onclick="loadStarImage()">加载星星图片</button>
-    <button onclick="clearImage()">清空图片</button>
-</div>
-
-<div style="margin-top:10px;">
-    <span id="status">就绪</span>
-</div>
-<img src="https://13842654826.github.io/12rm008/xingxing.jpg" alt="星星图片" width="800" height="800">
-<div id="imageContainer" style="margin-top:20px;"></div>
+<!-- 图片容器：必须先在页面中创建这个元素，否则 JS 找不到 -->
+<div id="imageContainer">加载中...</div>
 
 <script>
-    const starImageUrl = 'https://13842654826.github.io/12rm008/xingxing.jpg';
+    window.onload = function() {
+        // 修复语法错误：去掉回调函数后的 .0，延迟时间设为 0（可根据需要调整，比如 500 毫秒）
+        setTimeout(() => {
+            const imgContainer = document.getElementById('imageContainer');
+            const img = new Image(); // 用 Image 对象创建图片，方便监听加载状态
 
-    // 加载星星图片
-    function loadStarImage() {
-        // 检查是否已经加载过
-        const existingImg = document.getElementById('starImage');
-        if (existingImg) {
-            showStatus('星星图片已存在，无需重复加载');
-            return;
-        }
+            // 图片地址（你的原地址）
+            img.src = "https://13842654826.github.io/12rm008/xingxing.jpg";
 
-        showStatus('正在加载星星图片...');
+            // 图片加载成功：插入到容器
+            img.onload = function() {
+                imgContainer.innerHTML = ''; // 清空“加载中”提示
+                imgContainer.appendChild(img); // 添加图片
+            };
 
-        // 创建图片元素
-        const img = document.createElement('img');
-        img.id = 'starImage';
-        img.alt = '星星图片';
-        img.title = '星星图片';
-
-        // 设置图片源
-        img.src = starImageUrl;
-
-        // 设置图片样式
-        img.style.maxWidth = '300px';
-        img.style.maxHeight = '300px';
-        img.style.margin = '10px';
-        img.style.border = '1px solid #ccc';
-
-        // 图片加载成功
-        img.onload = function() {
-            showStatus('星星图片加载完成');
-        };
-
-        // 图片加载失败
-        img.onerror = function() {
-            showStatus('星星图片加载失败');
-            img.alt = '图片加载失败';
-            img.style.border = '2px dashed red';
-        };
-
-        // 添加到容器
-        const container = document.getElementById('imageContainer');
-        container.innerHTML = ''; // 清空容器
-        container.appendChild(img);
-    }
-
-    // 清空图片
-    function clearImage() {
-        const container = document.getElementById('imageContainer');
-        container.innerHTML = '';
-        showStatus('图片已清空');
-    }
-
-    // 显示状态
-    function showStatus(message) {
-        const statusElement = document.getElementById('status');
-        statusElement.textContent = message;
-    }
+            // 图片加载失败（比如 404）：显示兜底提示
+            img.onerror = function() {
+                imgContainer.innerHTML = '星星图片加载失败啦～ 可以检查一下图片地址是否正确哦！';
+            };
+        }, 0); // 延迟时间：0 毫秒（立即执行），可改为 300/500 毫秒（轻微延迟）
+    };
 </script>
 </body>
 </html>
