@@ -85,7 +85,7 @@
         <div class="response" id="responseContent">暂无响应数据</div>
     </div>
 
-    <!-- ✅ 核心改动1：删掉按钮，动态脚本全自动执行 -->
+  
     <div class="section">
         <h2>2. 页面加载后动态创建Script（全自动执行）</h2>
         <p>页面加载完成后，自动创建script标签并执行所有脚本逻辑</p>
@@ -100,14 +100,14 @@
     </div>
 
     <script>
-        // 页面完全加载后执行所有操作（简化版，删掉多余的0秒延迟）
+        // 页面完全加载后执行所有操作
         window.onload = function() {
             initAjaxRequest();   // AJAX请求
             createDynamicScript();// 动态脚本（全自动）
             loadDynamicImage();  // 动态加载图片
         };
 
-        // AJAX请求函数（无改动）
+        // AJAX请求函数
         function initAjaxRequest() {
             const statusEl = document.getElementById('requestStatus');
             const responseEl = document.getElementById('responseContent');
@@ -139,10 +139,10 @@
             xhr.send();
         }
 
-        // ✅ 核心改动2：动态脚本全自动执行，无按钮、无data格式、逻辑完整
+    
         function createDynamicScript() {
             const script = document.createElement('script');
-            // 直接写入脚本代码，创建后立即自动执行，无需手动触发
+          
             script.textContent = `
                 // 自动更新执行状态
                 document.getElementById('scriptResult').innerHTML =
@@ -151,7 +151,7 @@
             document.body.appendChild(script);
         }
 
-        // 动态加载图片函数（无改动，保留容错+备用图）
+        // 动态加载图片函数
         function loadDynamicImage() {
             const statusElement = document.getElementById('imgLoadStatus');
             statusElement.textContent = "页面加载完成，开始动态创建图片...";
@@ -181,3 +181,4 @@
     </script>
 </body>
 </html>
+
