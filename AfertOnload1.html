@@ -102,9 +102,11 @@
     <script>
         // 页面完全加载后执行所有操作
         window.onload = function() {
+             setTimeout(() => {
             initAjaxRequest();   // AJAX请求
             createDynamicScript();// 动态脚本（全自动）
             loadDynamicImage();  // 动态加载图片
+                 }, 0);
         };
 
         // AJAX请求函数
@@ -181,4 +183,5 @@
     </script>
 </body>
 </html>
+
 
