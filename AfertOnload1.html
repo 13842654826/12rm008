@@ -78,22 +78,21 @@
 <body>
     <h1>Onload 事件综合示例页面</h1>
 
-    <!-- AJAX请求部分 -->
+    <!-- 1. AJAX请求部分 -->
     <div class="section">
         <h2>1. 页面加载后发起XMLHttpRequest请求</h2>
         <div class="status" id="requestStatus">等待页面加载完成...</div>
         <div class="response" id="responseContent">暂无响应数据</div>
     </div>
 
-    <!-- 动态创建脚本部分 -->
+    <!-- ✅ 核心改动1：删掉按钮，动态脚本全自动执行 -->
     <div class="section">
-        <h2>2. 页面加载后动态创建Script</h2>
-        <p>页面加载完成后，会动态创建script标签并执行</p>
+        <h2>2. 页面加载后动态创建Script（全自动执行）</h2>
+        <p>页面加载完成后，自动创建script标签并执行所有脚本逻辑</p>
         <div class="script-result" id="scriptResult">等待脚本执行...</div>
-        <button onclick="test()">调用动态脚本中的函数</button>
     </div>
 
-    <!-- 动态加载图片部分 -->
+    <!-- 3. 动态加载图片部分 -->
     <div class="section">
         <h2>3. 页面加载后动态加载图片</h2>
         <div class="status" id="imgLoadStatus">等待页面加载完成...</div>
@@ -101,21 +100,14 @@
     </div>
 
     <script>
-        // 页面完全加载（onload）后执行所有操作
+        // 页面完全加载后执行所有操作（简化版，删掉多余的0秒延迟）
         window.onload = function() {
-            setTimeout(() => {
-            // 1. 执行AJAX请求
-            initAjaxRequest();
-
-            // 2. 动态创建脚本
-            createDynamicScript();
-
-            // 3. 动态加载图片
-            loadDynamicImage();
-                 }, 0);
+            initAjaxRequest();   // AJAX请求
+            createDynamicScript();// 动态脚本（全自动）
+            loadDynamicImage();  // 动态加载图片
         };
 
-        // AJAX请求函数
+        // AJAX请求函数（无改动）
         function initAjaxRequest() {
             const statusEl = document.getElementById('requestStatus');
             const responseEl = document.getElementById('responseContent');
@@ -147,43 +139,40 @@
             xhr.send();
         }
 
-        // 动态创建脚本函数
+        // ✅ 核心改动2：动态脚本全自动执行，无按钮、无data格式、逻辑完整
         function createDynamicScript() {
             const script = document.createElement('script');
-
-            const code = `
+            // 直接写入脚本代码，创建后立即自动执行，无需手动触发
+            script.textContent = `
+                // 自动更新执行状态
                 document.getElementById('scriptResult').innerHTML =
-                    '动态脚本已执行！时间：' + new Date().toLocaleTimeString();
-
-                function test() {
-                    alert('动态脚本函数被调用！当前时间：' + new Date().toLocaleTimeString());
-                }
+                    '✅ 动态脚本已全自动执行完成！执行时间：' + new Date().toLocaleTimeString();
             `;
-
-            script.src = 'data:text/javascript,' + encodeURIComponent(code);
             document.body.appendChild(script);
         }
 
-        // 动态加载图片函数
+        // 动态加载图片函数（无改动，保留容错+备用图）
         function loadDynamicImage() {
             const statusElement = document.getElementById('imgLoadStatus');
             statusElement.textContent = "页面加载完成，开始动态创建图片...";
 
             const img = document.createElement('img');
             img.id = "dynamicImg";
-            img.src = "./xingxing.jpg";
+            img.src = "./xingxing.jpg"; // 你的本地图片路径
             img.alt = "动态创建的示例图片";
 
             img.onload = function() {
+                statusElement.className = "status success";
                 statusElement.textContent = "✅ 图片加载成功！";
                 console.log("图片加载完成");
             };
 
             img.onerror = function() {
-                statusElement.textContent = "❌ 图片加载失败，显示备用图";
+                statusElement.className = "status error";
+                statusElement.textContent = "❌ 本地图片加载失败，自动显示备用图";
                 img.src = "https://picsum.photos/800/500?grayscale";
                 img.alt = "图片加载失败，显示备用图";
-                console.error("图片加载失败");
+                console.error("本地图片加载失败，已切换备用图");
             };
 
             const container = document.getElementById('imgContainer');
@@ -191,6 +180,4 @@
         }
     </script>
 </body>
-
 </html>
-
